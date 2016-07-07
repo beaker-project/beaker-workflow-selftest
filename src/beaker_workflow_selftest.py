@@ -116,7 +116,10 @@ class Workflow_SelfTest(BeakerWorkflow):
             if requested_arches and arch not in requested_arches:
                 continue
             recipe = self.recipe(distro, variant, arch,
-                    task_names=['/distribution/beaker/Sanity/reboot-tests'],
+                    task_names=[
+                        '/distribution/beaker/Sanity/Skip-result',
+                        '/distribution/beaker/Sanity/reboot-tests',
+                    ],
                     **kwargs)
             job.addRecipe(recipe)
         for distro, variant, arch in distros_variants_arches(multihost=True):
