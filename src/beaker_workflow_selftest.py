@@ -22,7 +22,7 @@ def distros_variants_arches(multihost=False):
         ('RHEL5.11-Server-20140827.0', [
             ('', ['i386', 'x86_64', 'ia64', 'ppc64', 's390x']),
         ]),
-        ('RHEL5.11-Server-20140827.0', [
+        ('RHEL5.11-Client-20140827.0', [
             ('', ['i386', 'x86_64']),
         ]),
         ('RHEL-6.8-20160414.0', [
