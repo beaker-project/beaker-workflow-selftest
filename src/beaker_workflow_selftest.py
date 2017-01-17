@@ -84,8 +84,14 @@ class Workflow_SelfTest(BeakerWorkflow):
         self.parser.remove_option('--clients')
 
     def recipe(self, distro, variant, arch, task_names, role='STANDALONE', **kwargs):
+        ks_meta = kwargs.pop('ks_meta')
+        if 'Fedora' in distro:
+            if ks_meta:
+                ks_meta += ' no_updates_repos'
+            else:
+                ks_meta = 'no_updates_repos'
         recipe = BeakerRecipe(**kwargs)
-        recipe.addBaseRequires(distro=distro, variant=variant, **kwargs)
+        recipe.addBaseRequires(distro=distro, variant=variant, ks_meta=ks_meta, **kwargs)
         arch_require = self.doc.createElement('distro_arch')
         arch_require.setAttribute('op', '=')
         arch_require.setAttribute('value', arch)
