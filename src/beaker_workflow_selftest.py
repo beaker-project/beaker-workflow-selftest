@@ -43,16 +43,17 @@ def distros_variants_arches(multihost=False):
             ('Workstation', ['x86_64']),
             ('ComputeNode', ['x86_64']),
         ]),
-        ('Fedora 24', [
-            # s390x omitted until initrd.img > 32 MB issue is solved (see bz1322235)
-            ('Server', ['i386', 'x86_64', 'ppc64', 'ppc64le', 'aarch64']),
-            ('Workstation', ['i386', 'x86_64']),
-        ]),
         ('Fedora-25', [
             # s390x omitted until initrd.img > 32 MB issue is solved (see bz1322235)
             ('Server', ['i386', 'x86_64', 'ppc64', 'ppc64le', 'aarch64']),
             ('Cloud', ['i386', 'x86_64', 'ppc64', 'ppc64le', 'aarch64']),
             ('Workstation', ['i386', 'x86_64']),
+        ]),
+        ('Fedora-26', [
+            # s390x omitted until initrd.img > 32 MB issue is solved (see bz1322235)
+            ('Server', ['x86_64', 'ppc64', 'ppc64le', 'aarch64']),
+            ('Cloud', ['x86_64', 'ppc64', 'ppc64le', 'aarch64']),
+            ('Workstation', ['x86_64', 'aarch64']),
         ]),
     ]
     for distro, variants_arches in supported_combinations:
