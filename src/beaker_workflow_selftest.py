@@ -25,19 +25,19 @@ def distros_variants_arches(multihost=False):
         ('RHEL5.11-Client-20140827.0', [
             ('', ['i386', 'x86_64']),
         ]),
-        ('RHEL-6.8-20160414.0', [
+        ('RHEL-6.9-20170309.0', [
             ('Server', ['i386', 'x86_64', 'ppc64', 's390x']),
             ('Workstation', ['i386', 'x86_64']),
             ('Client', ['i386', 'x86_64']),
             ('ComputeNode', ['x86_64']),
         ]),
-        ('RHEL-7.1-20150219.1', [
-            ('Server', ['x86_64', 'ppc64', 's390x']),
+        ('RHEL-7.2-20151030.0', [
+            ('Server', ['x86_64', 'ppc64', 'ppc64le', 's390x', 'aarch64']),
             ('Client', ['x86_64']),
             ('Workstation', ['x86_64']),
             ('ComputeNode', ['x86_64']),
         ]),
-        ('RHEL-7.2-20151030.0', [
+        ('RHEL-7.3-20161019.0', [
             ('Server', ['x86_64', 'ppc64', 'ppc64le', 's390x', 'aarch64']),
             ('Client', ['x86_64']),
             ('Workstation', ['x86_64']),
