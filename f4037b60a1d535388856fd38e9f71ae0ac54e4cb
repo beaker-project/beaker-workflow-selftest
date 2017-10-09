@@ -1,0 +1,6 @@
+Ready-for-Checks+1: Dan Callaghan <dcallagh@redhat.com>
+Submitted-by: Dan Callaghan <dcallagh@redhat.com>
+Submitted-at: Mon, 09 Oct 2017 04:21:45 +0000
+Reviewed-on: https://gerrit.beaker-project.org/4890
+Project: beaker-workflow-selftest
+Branch: refs/heads/master
