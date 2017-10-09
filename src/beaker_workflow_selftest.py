@@ -1,5 +1,7 @@
 from bkr.client import BeakerWorkflow, BeakerJob, BeakerRecipeSet, BeakerRecipe
 
+ext4_unsupported_distros = ['RHEL4-U9', 'RHEL5.11-Server-20140827.0', 'RHEL5.11-Client-20140827.0']
+
 def distros_variants_arches(multihost=False):
     """
     For single-host testing we return all combinations of (distro, variant, 
@@ -122,12 +124,13 @@ class Workflow_SelfTest(BeakerWorkflow):
                 continue
             if requested_arches and arch not in requested_arches:
                 continue
-            recipe = self.recipe(distro, variant, arch,
-                    task_names=[
-                        '/distribution/beaker/Sanity/Skip-result',
-                        '/distribution/beaker/Sanity/reboot-tests',
-                    ],
-                    **kwargs)
+            task_names = [
+                '/distribution/beaker/Sanity/Skip-result',
+                '/distribution/beaker/Sanity/reboot-tests',
+            ]
+            if distro not in ext4_unsupported_distros:
+                task_names.append('/CoreOS/examples/Sanity/ext4-test')
+            recipe = self.recipe(distro, variant, arch, task_names=task_name, **kwargs)
             job.addRecipe(recipe)
         for distro, variant, arch in distros_variants_arches(multihost=True):
             if requested_distro and requested_distro != distro:
