@@ -130,7 +130,7 @@ class Workflow_SelfTest(BeakerWorkflow):
             ]
             if distro not in ext4_unsupported_distros:
                 task_names.append('/CoreOS/examples/Sanity/ext4-test')
-            recipe = self.recipe(distro, variant, arch, task_names=task_name, **kwargs)
+            recipe = self.recipe(distro, variant, arch, task_names=task_names, **kwargs)
             job.addRecipe(recipe)
         for distro, variant, arch in distros_variants_arches(multihost=True):
             if requested_distro and requested_distro != distro:
