@@ -56,17 +56,34 @@ def distros_variants_arches(multihost=False):
             ('Workstation', ['i386', 'x86_64']),
         ]),
     ]
+    beah = TestHarness(ks_meta='', whiteboard='', distro_compatible_func=distro_compatible_with_beah)
+    restraint = TestHarness(ks_meta='harness=restraint-rhts', whiteboard='(restraint)', distro_compatible_func=lambda x: True)
+
     for distro, variants_arches in supported_combinations:
         for variant, arches in variants_arches:
-            if not multihost:
-                for arch in arches:
-                    yield (distro, variant, arch)
-            else:
-                # This is the simplest option since x86_64 is supported in 
-                # every release and is the most abundant type of hardware. We 
-                # *could* do something smarter like use a different arch from 
-                # each distro-variant in order to broaden the coverage.
-                yield (distro, variant, 'x86_64')
+            for harness in [beah, restraint]:
+                if harness.distro_is_compatible(distro):
+                    continue
+                if not multihost:
+                    for arch in arches:
+                        yield (distro, variant, arch, harness)
+                else:
+                    # This is the simplest option since x86_64 is supported in 
+                    # every release and is the most abundant type of hardware. We 
+                    # *could* do something smarter like use a different arch from 
+                    # each distro-variant in order to broaden the coverage.
+                    yield (distro, variant, 'x86_64', harness)
+
+class TestHarness(object):
+
+    def __init__(self, ks_meta, whiteboard, distro_compatible_func=None):
+        self.ks_meta = ks_meta
+        self.whiteboard = whiteboard
+        self.distro_is_compatible = distro_compatible_func
+
+def distro_compatible_with_beah(distro_name):
+    return distro_name not in ['Fedora-29']
+
 
 class Workflow_SelfTest(BeakerWorkflow):
     """Workflow to generate a job for testing Beaker itself"""
@@ -84,13 +101,15 @@ class Workflow_SelfTest(BeakerWorkflow):
         self.parser.remove_option('--servers')
         self.parser.remove_option('--clients')
 
-    def recipe(self, distro, variant, arch, task_names, role='STANDALONE', **kwargs):
+    def recipe(self, harness, distro, variant, arch, task_names, role='STANDALONE', **kwargs):
         ks_meta = kwargs.pop('ks_meta')
         if 'Fedora' in distro:
             if ks_meta:
                 ks_meta += ' no_updates_repos'
             else:
                 ks_meta = 'no_updates_repos'
+
+        ks_meta = '%s %s' % (ks_meta, harness.ks_meta)
         recipe = BeakerRecipe(**kwargs)
         recipe.addBaseRequires(distro=distro, variant=variant, ks_meta=ks_meta, **kwargs)
         arch_require = self.doc.createElement('distro_arch')
@@ -99,7 +118,7 @@ class Workflow_SelfTest(BeakerWorkflow):
         return self.processTemplate(recipe,
                 requestedTasks=[{'name': task_name, 'arches': []} for task_name in task_names],
                 distroRequires=[arch_require],
-                whiteboard='%s %s %s %s' % (distro, variant, arch, role),
+                whiteboard='%s %s %s %s %s' % (distro, variant, arch, role, harness.whiteboard),
                 role=role,
                 **kwargs)
 
@@ -115,7 +134,10 @@ class Workflow_SelfTest(BeakerWorkflow):
         self.set_hub(**kwargs)
 
         job = BeakerJob(whiteboard=whiteboard, **kwargs)
-        for distro, variant, arch in distros_variants_arches(multihost=False):
+        beah = TestHarness(ks_meta='', whiteboard='', distro_compatible_func=distro_compatible_with_beah)
+        restraint = TestHarness(ks_meta='harness=restraint-rhts', whiteboard='(restraint)', distro_compatible_func=lambda x: True)
+
+        for distro, variant, arch, harness in distros_variants_arches(multihost=False):
             if requested_distro and requested_distro != distro:
                 continue
             if requested_variant and requested_variant != variant:
@@ -128,18 +150,20 @@ class Workflow_SelfTest(BeakerWorkflow):
             ]
             if distro not in ext4_unsupported_distros:
                 task_names.append('/CoreOS/examples/Sanity/ext4-test')
-            recipe = self.recipe(distro, variant, arch, task_names=task_names, **kwargs)
+            recipe = self.recipe(harness, distro, variant, arch, task_names=task_names, **kwargs)
             job.addRecipe(recipe)
-        for distro, variant, arch in distros_variants_arches(multihost=True):
+
+        for distro, variant, arch, harness in distros_variants_arches(multihost=True):
             if requested_distro and requested_distro != distro:
                 continue
             if requested_variant and requested_variant != variant:
                 continue
             if requested_arches and arch not in requested_arches:
                 continue
+
             rs = BeakerRecipeSet(**kwargs)
             for role in ['SERVERS', 'CLIENTONE', 'CLIENTTWO']:
-                recipe = self.recipe(distro, variant, arch,
+                recipe = self.recipe(harness, distro, variant, arch,
                         task_names=['/distribution/beaker/Sanity/sync-set_block-tests'],
                         role=role, **kwargs)
                 rs.addRecipe(recipe)
@@ -147,7 +171,7 @@ class Workflow_SelfTest(BeakerWorkflow):
 
         jobxml = job.toxml(**kwargs)
         if kwargs.get('debug', False):
-            print jobxml
+            print job.node.toprettyxml()
         if not kwargs.get('dryrun', False):
             t_id = self.hub.jobs.upload(jobxml)
             print 'Submitted: %s' % [t_id]
