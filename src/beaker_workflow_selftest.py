@@ -49,6 +49,10 @@ def distros_variants_arches(multihost=False):
             ('Server', ['i386', 'x86_64', 'ppc64', 'ppc64le', 'aarch64', 's390x']),
             ('Workstation', ['i386', 'x86_64']),
         ]),
+        ('Fedora-28', [
+            ('Server', ['i386', 'x86_64', 'ppc64', 'ppc64le', 'aarch64', 's390x']),
+            ('Workstation', ['i386', 'x86_64']),
+        ]),
     ]
     beah = TestHarness(ks_meta='', whiteboard='', distro_compatible_func=distro_compatible_with_beah)
     restraint = TestHarness(ks_meta='harness=restraint-rhts', whiteboard='(restraint)', distro_compatible_func=lambda x: True)
