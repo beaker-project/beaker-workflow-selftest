@@ -45,12 +45,6 @@ def distros_variants_arches(multihost=False):
             ('Workstation', ['x86_64']),
             ('ComputeNode', ['x86_64']),
         ]),
-        ('Fedora-26', [
-            # s390x omitted until initrd.img > 32 MB issue is solved (see bz1322235)
-            # Cloud omitted because it does not install (see bz1496669)
-            ('Server', ['x86_64', 'ppc64', 'ppc64le', 'aarch64']),
-            ('Workstation', ['x86_64', 'aarch64']),
-        ]),
         ('Fedora-27', [
             ('Server', ['i386', 'x86_64', 'ppc64', 'ppc64le', 'aarch64', 's390x']),
             ('Workstation', ['i386', 'x86_64']),
