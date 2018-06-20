@@ -1,0 +1,10 @@
+Ready-for-Checks+1: Roman Joost <rjoost@redhat.com>
+Code-Review+1: Matt Tyson <mtyson@redhat.com>
+Code-Review+1: Jacob McKenzie <jmckenzi@redhat.com>
+Code-Review+2: Roman Joost <rjoost@redhat.com>
+Verified+1: Roman Joost <rjoost@redhat.com>
+Submitted-by: Roman Joost <rjoost@redhat.com>
+Submitted-at: Wed, 20 Jun 2018 00:23:28 +0000
+Reviewed-on: https://gerrit.beaker-project.org/6137
+Project: beaker-workflow-selftest
+Branch: refs/heads/master
