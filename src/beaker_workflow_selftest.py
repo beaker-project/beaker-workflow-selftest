@@ -60,7 +60,7 @@ def distros_variants_arches(multihost=False):
     for distro, variants_arches in supported_combinations:
         for variant, arches in variants_arches:
             for harness in [beah, restraint]:
-                if harness.distro_is_compatible(distro):
+                if not harness.distro_is_compatible(distro):
                     continue
                 if not multihost:
                     for arch in arches:
