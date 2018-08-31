@@ -45,6 +45,14 @@ def distros_variants_arches(multihost=False):
             ('Workstation', ['x86_64']),
             ('ComputeNode', ['x86_64']),
         ]),
+        # RHEL8 Alpha
+        ('RHEL-8.0-20180531.2', [
+            ('BaseOS', ['x86_64', 'ppc64le', 's390x', 'aarch64']),
+        ]),
+        # update this to devel phase exit when that's ready
+        ('RHEL-8.0-20180830.n.0', [
+            ('BaseOS', ['x86_64', 'ppc64le', 's390x', 'aarch64']),
+        ]),
         ('Fedora-27', [
             ('Server', ['i386', 'x86_64', 'ppc64', 'ppc64le', 'aarch64', 's390x']),
             ('Workstation', ['i386', 'x86_64']),
@@ -80,7 +88,11 @@ class TestHarness(object):
         self.distro_is_compatible = distro_compatible_func
 
 def distro_compatible_with_beah(distro_name):
-    return distro_name not in ['Fedora-29']
+    if distro_name == 'Fedora-29':
+        return False
+    if distro_name.startswith('RHEL-8.'):
+        return False
+    return True
 
 
 class Workflow_SelfTest(BeakerWorkflow):
