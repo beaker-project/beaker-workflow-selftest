@@ -49,8 +49,8 @@ def distros_variants_arches(multihost=False):
         ('RHEL-8.0-20180531.2', [
             ('BaseOS', ['x86_64', 'ppc64le', 's390x', 'aarch64']),
         ]),
-        # update this to devel phase exit when that's ready
-        ('RHEL-8.0-20180830.n.0', [
+        # snap1
+        ('RHEL-8.0-20180920.2', [
             ('BaseOS', ['x86_64', 'ppc64le', 's390x', 'aarch64']),
         ]),
         ('Fedora-27', [
